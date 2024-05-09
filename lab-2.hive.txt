@@ -1,0 +1,107 @@
+show databases;
+
+create database mydb;
+
+use mydb;
+
+
+create table flight (
+fno int,
+year int,
+dest varchar(10),
+delay float
+);
+
+alter table flight rename to air_flight;
+
+show tables;
+
+alter table air_flight
+add columns(source varchar(10));
+
+drop table flight;
+
+show tables;
+
+desc air_flight;
+
+create table flight(
+fno int,
+year int,
+dest varchar(10),
+delay float
+)
+row format delimited
+fields terminated by ','
+lines terminated by '\n'
+stored as textfile
+;
+
+insert into flight values(123, 2009, "mumbai", 30.6);
+
+insert into flight values
+(203, 2003, "pune", 20.3),
+(213, 2013, "delhi", 25.3);
+
+select * from flight;
+
+--------- Open new TERMINAL ----------
+
+# s1 change the diectory to desktop
+cd Desktop
+
+# s2 create file by name input.txt
+touch input.txt
+
+# s3 open it by gedit and enter some records/values
+gedit input.txt
+
+112,2004,navi mumbai,60.3
+121,2002,latur,30.3
+132,2001,hydrabad,20.3
+122,2005,goa,50.3
+312,2006,noida,10.3
+
+--------------------------------------
+
+load data local inpath "/home/cloudera/Desktop/input.txt" into table flight;
+
+select * from flight;
+
+
+create table nflight(
+fno int,
+year int,
+source varchar(10)
+)
+row format delimited
+fields terminated by ','
+lines terminated by '\n'
+stored as textfile
+;
+
+select * from flight;
+
+insert into nflight values
+(123, 2009, "pune"),
+(203, 2003, "delhi"),
+(213, 2013, "mumbai");
+
+select a.fno, a.year, a.dest, a.delay, b.source
+from flight a join nflight b
+on(a.fno=b.fno)
+;
+
+create index flight_index on table flight(fno)
+as "org.apache.hadoop.hive.ql.index.compact.CompactIndexHandler"
+WITH DEFERRED REBUILD;
+
+
+
+
+
+
+
+
+
+ 
